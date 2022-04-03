@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\PostsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,10 +35,13 @@ $posts=[
        ]
 ];
 
-Route::view('/', 'home.index')->name('home.index');
-Route::view('/contact', 'home.contact')->name('home.contact');
+// Route::view('/', 'home.index')->name('home.index');
+// Route::view('/contact', 'home.contact')->name('home.contact');
+Route::get('/', [HomeController::class, 'home'])->name('home.index');
+Route::get('/contact', [HomeController::class, 'contact'])->name('home.contact');
+Route::get('/single', AboutController::class);
 
-Route::get('/posts', function() use ($posts) {
+/* Route::get('/posts', function() use ($posts) {
     //dd(request()->all());
     dd((int)request()->input('page', 0));
     return view('posts.index', ['posts'=>$posts]);
@@ -44,7 +50,9 @@ Route::get('/posts', function() use ($posts) {
 Route::get('/posts/{id}', function ($id) use($posts) {
     abort_if(!isset($posts[$id]), 404);
     return view('posts.show', ['post'=>$posts[$id]]);
-});
+}); */
+
+Route::resource('posts', PostsController::class)->only(['index','show']);
 
 Route::prefix('/fun')->name('fun.')->group(function() use($posts) {
   Route::get('/responses', function() use($posts) {
