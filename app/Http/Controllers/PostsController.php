@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePost;
 use App\Models\BlogPost;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
 class PostsController extends Controller
@@ -24,7 +26,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -33,9 +35,26 @@ class PostsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StorePost $request)
     {
-        //
+        //dd($request);
+
+        /*$request->validate([
+            'title'=>'bail|required|min:3|max:20',
+            'content'=>'required|min:5'
+        ]); */
+
+        $validated=$request->validated();
+        $post=BlogPost::create($validated);
+
+        // $post=new BlogPost();
+        // $post->title=$validated['title'];  //$request->input(('title'));
+        // $post->content=$validated['content'];  //$request->input(('content'));
+        // $post->save();
+
+        $request->session()->flash('status', 'The blog post was created!');
+
+        return redirect()->route('posts.show', ['post'=>$post->id]);
     }
 
     /**

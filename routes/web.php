@@ -52,7 +52,7 @@ Route::get('/posts/{id}', function ($id) use($posts) {
     return view('posts.show', ['post'=>$posts[$id]]);
 }); */
 
-Route::resource('posts', PostsController::class)->only(['index','show']);
+Route::resource('posts', PostsController::class)->only(['index','show','create', 'store']);
 
 Route::prefix('/fun')->name('fun.')->group(function() use($posts) {
   Route::get('/responses', function() use($posts) {
